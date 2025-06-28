@@ -9,4 +9,4 @@ typedef char bool;
 
 #define SECTOR_SIZE 512
 
-#endif // __STD_YPE_H__
+#endif // __STD_TYPE_H__

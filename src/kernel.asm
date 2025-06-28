@@ -1,40 +1,69 @@
-; kernel.asm
+bits 16
 
 global _putInMemory
-global _interrupt
+global _interrupt10, _interrupt13, _interrupt16, _interrupt21
 
-; void putInMemory(int segment, int address, char character)
+; A simple function to write to a specific memory location
 _putInMemory:
-	push bp
-	mov bp,sp
-	push ds
-	mov ax,[bp+4]
-	mov si,[bp+6]
-	mov cl,[bp+8]
-	mov ds,ax
-	mov [si],cl
-	pop ds
-	pop bp
-	ret
+    push bp
+    mov bp, sp
+    push ds
+    mov ax, [bp+4]  ; segment
+    mov si, [bp+6]  ; address
+    mov cl, [bp+8]  ; character
+    mov ds, ax
+    mov [si], cl
+    pop ds
+    pop bp
+    ret
 
-; int interrupt(int number, int AX, int BX, int CX, int DX)
-_interrupt:
-	push bp
-	mov bp,sp
-	mov ax,[bp+4]
-	push ds
-	mov bx,cs
-	mov ds,bx
-	mov si,intr
-	mov [si+1],al
-	pop ds
-	mov ax,[bp+6]
-	mov bx,[bp+8]
-	mov cx,[bp+10]
-	mov dx,[bp+12]
+; We now have separate, hardcoded functions for each interrupt needed.
+; This is far more stable than the previous self-modifying version.
 
-intr:	int 0x00
+_interrupt10:
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]
+    mov bx, [bp+6]
+    mov cx, [bp+8]
+    mov dx, [bp+10]
+    int 0x10
+    mov [bp+4], ax ; Return value in AX
+    pop bp
+    ret
 
-	mov ah,0
-	pop bp
-	ret
+_interrupt13:
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]
+    mov bx, [bp+6]
+    mov cx, [bp+8]
+    mov dx, [bp+10]
+    int 0x13
+    mov [bp+4], ax
+    pop bp
+    ret
+
+_interrupt16:
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]
+    mov bx, [bp+6]
+    mov cx, [bp+8]
+    mov dx, [bp+10]
+    int 0x16
+    mov [bp+4], ax
+    pop bp
+    ret
+
+_interrupt21:
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]
+    mov bx, [bp+6]
+    mov cx, [bp+8]
+    mov dx, [bp+10]
+    int 0x21
+    mov [bp+4], ax
+    pop bp
+    ret
