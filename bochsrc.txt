@@ -145,7 +145,7 @@ floppy_bootsig_check: disabled=0
 #   log: /dev/tty
 #=======================================================================
 # Log bochs, gunakan /dev/null untuk non verbose console log
-log: bochs.out
+log: -
 
 #=======================================================================
 # LOG CONTROLS
